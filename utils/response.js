@@ -9,9 +9,10 @@ Response = ({ res, code = 200, data, message = null }) => {
 
 ErrResponse = ({ res, error }) => {
   const data = {
-    status: "failed",
+    status: "error",
     data: null,
   };
+  console.log(error);
   let code = 500;
   // see "./utils/exception"
   if (error.name == "Exception") {

@@ -3,6 +3,7 @@ var cors = require("cors");
 require("dotenv").config();
 const logger = require("morgan");
 const mongoose = require("mongoose");
+const fileUpload = require("express-fileupload");
 const routes = require("./routes");
 
 const app = express();
@@ -25,6 +26,11 @@ mongoose.connect(process.env.MONGO_URL, mongooseOptions).then(
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(
+  fileUpload({
+    limits: { fileSize: 50 * 1024 * 1024 },
+  })
+);
 app.use(cors());
 
 app.use((err, req, res, next) => {
@@ -44,9 +50,6 @@ app.use("/api/v1", routes);
 
 process.on("unhandledRejection", (error) => {
   console.error("Uncaught Error", error);
-  return res
-    .status(400)
-    .json({ message: "Server Error!", status: "error", data: null });
 });
 
 app.listen(port, () => {

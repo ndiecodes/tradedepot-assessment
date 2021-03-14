@@ -16,5 +16,14 @@ router.post(
 
 router.post("/login", middleware.validateLoginRequest, controllers.auth.login);
 
+router.post(
+  "/products",
+  middleware.auth,
+  middleware.validateCreateProductRequest,
+  controllers.product.create
+);
+
+router.get("/products", middleware.auth, controllers.product.getAll);
+
 /*Export your routes*/
 module.exports = router;
