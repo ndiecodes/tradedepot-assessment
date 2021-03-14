@@ -13,7 +13,7 @@ exports.create = async (req, res) => {
 
 exports.getAll = async (req, res) => {
   try {
-    const data = await productService.getAll(req.user);
+    const data = await productService.getAllByLocation(req.user);
     return Response({ res, data });
   } catch (error) {
     console.log(error);
