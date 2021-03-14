@@ -1,7 +1,7 @@
 const ValidateRegister = require("../validations/register");
 
-validateRegisterRequest = (req, res, next) => {
-  const [err, message] = ValidateRegister(req.body);
+validateRegisterRequest = async (req, res, next) => {
+  const [err, message] = await ValidateRegister(req.body);
 
   if (err) {
     const errorData = {

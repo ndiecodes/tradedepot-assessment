@@ -14,6 +14,19 @@ let userSchema = Schema({
   },
   phone: String,
   password: String,
+  address: String,
+  location: {
+    type: {
+      type: String,
+      enum: ["Point"],
+      default: "Point",
+    },
+    coordinates: {
+      type: [Number], // [longitude, latitude]
+      index: "2dsphere",
+      default: [],
+    },
+  },
 });
 
 // hash passwords for new records before saving

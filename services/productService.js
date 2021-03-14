@@ -4,19 +4,33 @@ const Comment = require("../models/Comment");
 const Reply = require("../models/Reply");
 const Storage = require("../utils/storage");
 
+const maxDistance = 10 * 1609.344; // 10 mile radius
+
 exports.create = async (input, files, user) => {
   const product = new Product();
   product.name = input.name;
   product.image = await Storage.streamUpload(files.image.data);
   product.user = user._id;
+  product.location = user.location;
 
   await product.save();
 
   return product;
 };
 
-exports.getAll = async (input, files, user) => {
-  const products = Product.find({});
+exports.getAll = async (user) => {
+  const coordinates = user.location.coordinates;
+  const products = Product.find({
+    location: {
+      $near: {
+        $geometry: {
+          type: "Point",
+          coordinates: coordinates,
+        },
+        $maxDistance: maxDistance,
+      },
+    },
+  });
 
   return products;
 };

@@ -3,15 +3,31 @@ const User = require("../models/user");
 const Exception = require("../utils/exception");
 
 exports.register = async (input) => {
-  const user = new User();
-  user.name = input.name;
-  user.email = input.email;
-  user.password = input.password;
-  await user.save();
+  try {
+    const user = new User();
+    user.name = input.name;
+    user.email = input.email;
+    user.password = input.password;
 
-  const token = user.getJWT();
+    (user.location = {
+      type: "Point",
+      coordinates: [Number(input.longitute), Number(input.latitude)],
+    }),
+      await user.save();
 
-  return { user, token };
+    const token = user.getJWT();
+
+    return { user, token };
+  } catch (err) {
+    if (err.name === "MongoError" && err.code === 11000) {
+      field = Object.keys(err.keyValue)[0];
+      let message = ` "${field}" already exists!`;
+
+      throw new Exception(message, 422);
+    }
+
+    throw err;
+  }
 };
 
 exports.login = async (input) => {
@@ -27,4 +43,3 @@ exports.login = async (input) => {
 
   return { user, token };
 };
-
