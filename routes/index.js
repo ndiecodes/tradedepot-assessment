@@ -50,7 +50,6 @@ router.post(
 router.get(
   "/products/:productId/comments/:commentId/replies",
   middleware.auth,
-  middleware.validateCommentReplyRequest,
   controllers.product.getProductCommentReplies
 );
 
